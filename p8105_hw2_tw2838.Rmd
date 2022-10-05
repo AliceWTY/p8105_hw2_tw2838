@@ -5,6 +5,14 @@ date: "2022-10-05"
 output: html_document
 ---
 
+Set up and load the libraries.
+```{r}
+library(tidyverse)
+library(readxl)
+library(haven)
+```
+
+
 # **Problem #1**
 
 
