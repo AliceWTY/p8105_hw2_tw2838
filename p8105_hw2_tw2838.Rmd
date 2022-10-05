@@ -1,0 +1,16 @@
+---
+title: "p8105_hw2_tw2838"
+author: "Tianyou Wang"
+date: "2022-10-05"
+output: html_document
+---
+
+# **Problem #1**
+
+
+
+# **Problem #2**
+
+
+
+# **Problem #3**
