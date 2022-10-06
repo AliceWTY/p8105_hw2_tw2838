@@ -116,11 +116,18 @@ une_df = read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>%
 
 Combine snp and pols
 ```{r}
-comb1 = left_join(pm_df, snp_df, by = c("year", "month")) 
+comb1_df = left_join(pm_df, snp_df, by = c("year", "month")) 
 ```
 
 Combine comb1 and unemployment
 ```{r}
-comb2 = left_join(comb1,une_df, by = c("year", "month")) 
+comb2_df = left_join(comb1_df,une_df, by = c("year", "month")) 
 ```
 
+In the final combined dataset, we have data collected for all months from `min(comb2_df$year)` to `max(comb2_df$year)`. 
+
+It is charactrized by `r ncol(comb2_df)` variables. We can see the example of the first 5 observations by using `print(tw_df, n=5)`. 
+
+```{r}
+print(tw_df, n=5)
+```
