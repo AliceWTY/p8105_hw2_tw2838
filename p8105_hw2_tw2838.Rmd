@@ -13,9 +13,18 @@ library(haven)
 ```
 
 
-# **Problem #1**
+# **Problem #1 NYC Transit data**
 
+Import and clean the NYC Transit csv file.
 
+```{r}
+nyc_df = read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
+  janitor::clean_names() %>%
+  select(line, station_name, station_latitude, station_longitude,
+         route1:route11, entry, vending, entrance_type, ada) %>%
+  mutate(entry = ifelse(entry == "YES", 1, 0))
+```
+After we cleaned the data, this dataset contains `r nrow(nyc_df)` observations, and it is charactrized by `r ncol(nyc_df)` variables.
 
 # **Problem #2 Mr.Trash Wheel**
 
