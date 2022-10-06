@@ -92,11 +92,14 @@ Import and clean the dataset: snp.csv
 ```{r warning=FALSE}
 snp_df = read_csv("./data/fivethirtyeight_datasets/snp.csv") %>% 
   janitor::clean_names() %>% 
-  separate(date, into = c("year", "month", "day"), sep = '/') %>%
+  separate(date, into = c("month", "day", "year"), sep = '/') %>%
   mutate(month = month.name[as.integer(month)]) %>%
-  arrange(year, month) %>%
   relocate(year, month, everything()) %>%
-  select(-day)
+  select(-day) %>%
+  mutate(year = as.integer(year)) %>%
+  mutate(year = ifelse(year > 15 , year + 1900, year + 2000)) %>%
+  mutate(year = as.character(year)) %>%
+  arrange(year, month)
 ```
 
 Import and clean the dataset: unemployment.csv
@@ -104,9 +107,20 @@ Import and clean the dataset: unemployment.csv
 ```{r warning=FALSE}
 une_df = read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>% 
   janitor::clean_names() %>% 
+  mutate(year = as.character(year)) %>%
   pivot_longer(jan:dec, 
     names_to = "month",
     values_to = "unemployment"
   )
+```
+
+Combine snp and pols
+```{r}
+comb1 = left_join(pm_df, snp_df, by = c("year", "month")) 
+```
+
+Combine comb1 and unemployment
+```{r}
+comb2 = left_join(comb1,une_df, by = c("year", "month")) 
 ```
 

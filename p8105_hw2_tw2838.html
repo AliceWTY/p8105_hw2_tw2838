@@ -471,11 +471,14 @@ is 856.</p>
 <p>Import and clean the dataset: snp.csv</p>
 <pre class="r"><code>snp_df = read_csv(&quot;./data/fivethirtyeight_datasets/snp.csv&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 
-  separate(date, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &#39;/&#39;) %&gt;%
+  separate(date, into = c(&quot;month&quot;, &quot;day&quot;, &quot;year&quot;), sep = &#39;/&#39;) %&gt;%
   mutate(month = month.name[as.integer(month)]) %&gt;%
-  arrange(year, month) %&gt;%
   relocate(year, month, everything()) %&gt;%
-  select(-day)</code></pre>
+  select(-day) %&gt;%
+  mutate(year = as.integer(year)) %&gt;%
+  mutate(year = ifelse(year &gt; 15 , year + 1900, year + 2000)) %&gt;%
+  mutate(year = as.character(year)) %&gt;%
+  arrange(year, month)</code></pre>
 <pre><code>## Rows: 787 Columns: 2
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -487,6 +490,7 @@ is 856.</p>
 <p>Import and clean the dataset: unemployment.csv</p>
 <pre class="r"><code>une_df = read_csv(&quot;./data/fivethirtyeight_datasets/unemployment.csv&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 
+  mutate(year = as.character(year)) %&gt;%
   pivot_longer(jan:dec, 
     names_to = &quot;month&quot;,
     values_to = &quot;unemployment&quot;
@@ -498,6 +502,10 @@ is 856.</p>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Combine snp and pols</p>
+<pre class="r"><code>comb1 = left_join(pm_df, snp_df, by = c(&quot;year&quot;, &quot;month&quot;)) </code></pre>
+<p>Combine comb1 and unemployment</p>
+<pre class="r"><code>comb2 = left_join(comb1,une_df, by = c(&quot;year&quot;, &quot;month&quot;)) </code></pre>
 </div>
 
 
