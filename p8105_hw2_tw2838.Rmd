@@ -2,7 +2,7 @@
 title: "p8105_hw2_tw2838"
 author: "Tianyou Wang"
 date: "2022-10-05"
-output: html_document
+output: github_document
 ---
 
 Set up and load the libraries.
