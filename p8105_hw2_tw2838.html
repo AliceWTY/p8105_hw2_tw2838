@@ -451,8 +451,53 @@ first 5 observations by using <code>print(tw_df, n=5)</code>.</p>
 <p>The total number of sports balls collected by Mr. Trash Wheel in 2020
 is 856.</p>
 </div>
-<div id="problem-3" class="section level1">
-<h1><strong>Problem #3</strong></h1>
+<div id="problem-3-fivethirtyeight" class="section level1">
+<h1><strong>Problem #3 FiveThirtyEight </strong></h1>
+<p>Import and clean the dataset: pols-month.csv</p>
+<pre class="r"><code>pm_df = read_csv(&quot;./data/fivethirtyeight_datasets/pols-month.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  separate(mon, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &#39;-&#39;) %&gt;%
+  mutate(month = month.name[as.integer(month)]) %&gt;%
+  mutate(president = ifelse(prez_gop == 0, &quot;dem&quot;, &quot;gop&quot;)) %&gt;%
+  select(-prez_gop, -prez_dem, -day)</code></pre>
+<pre><code>## Rows: 822 Columns: 9
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl  (8): prez_gop, gov_gop, sen_gop, rep_gop, prez_dem, gov_dem, sen_dem, r...
+## date (1): mon
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Import and clean the dataset: snp.csv</p>
+<pre class="r"><code>snp_df = read_csv(&quot;./data/fivethirtyeight_datasets/snp.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  separate(date, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &#39;/&#39;) %&gt;%
+  mutate(month = month.name[as.integer(month)]) %&gt;%
+  arrange(year, month) %&gt;%
+  relocate(year, month, everything()) %&gt;%
+  select(-day)</code></pre>
+<pre><code>## Rows: 787 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): date
+## dbl (1): close
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Import and clean the dataset: unemployment.csv</p>
+<pre class="r"><code>une_df = read_csv(&quot;./data/fivethirtyeight_datasets/unemployment.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  pivot_longer(jan:dec, 
+    names_to = &quot;month&quot;,
+    values_to = &quot;unemployment&quot;
+  )</code></pre>
+<pre><code>## Rows: 68 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (13): Year, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 
 

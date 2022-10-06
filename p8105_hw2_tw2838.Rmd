@@ -74,4 +74,39 @@ The total number of sports balls collected by Mr. Trash Wheel in 2020 is `r sum(
 
 
 
-# **Problem #3**
+# **Problem #3 FiveThirtyEight **
+
+Import and clean the dataset: pols-month.csv
+
+```{r warning=FALSE}
+pm_df = read_csv("./data/fivethirtyeight_datasets/pols-month.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(mon, into = c("year", "month", "day"), sep = '-') %>%
+  mutate(month = month.name[as.integer(month)]) %>%
+  mutate(president = ifelse(prez_gop == 0, "dem", "gop")) %>%
+  select(-prez_gop, -prez_dem, -day)
+```
+
+Import and clean the dataset: snp.csv
+
+```{r warning=FALSE}
+snp_df = read_csv("./data/fivethirtyeight_datasets/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(date, into = c("year", "month", "day"), sep = '/') %>%
+  mutate(month = month.name[as.integer(month)]) %>%
+  arrange(year, month) %>%
+  relocate(year, month, everything()) %>%
+  select(-day)
+```
+
+Import and clean the dataset: unemployment.csv
+
+```{r warning=FALSE}
+une_df = read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(jan:dec, 
+    names_to = "month",
+    values_to = "unemployment"
+  )
+```
+
