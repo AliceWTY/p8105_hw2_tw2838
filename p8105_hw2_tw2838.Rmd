@@ -6,7 +6,7 @@ output: html_document
 ---
 
 Set up and load the libraries.
-```{r}
+```{r warning = FALSE}
 library(tidyverse)
 library(readxl)
 library(haven)
@@ -17,7 +17,60 @@ library(haven)
 
 
 
-# **Problem #2**
+# **Problem #2 Mr.Trash Wheel**
+
+Import and clean the Mr. Trash Wheel excel sheet.
+
+```{r warning = FALSE}
+tw_df = read_excel("./data/Trash_Wheel_Collection_Data.xlsx", sheet = 1, skip = 1) %>%
+  janitor::clean_names() %>% 
+  select(-x15, -x16) %>%
+  mutate(sports_balls = as.integer(sports_balls)) %>% 
+  mutate(type = "Trash Wheel") %>%
+  drop_na(dumpster) %>%
+  view()
+```
+
+Import and clean the Professor Trash Wheel sheet.
+
+```{r warning = FALSE}
+ptw_df = read_excel("./data/Trash_Wheel_Collection_Data.xlsx", sheet = 2, skip = 1) %>%
+  janitor::clean_names() %>%
+  mutate(type = "Professor Trash Wheel") %>%
+  mutate(sports_balls = "NA") %>%
+  mutate(sports_balls = as.integer(sports_balls)) %>%
+  mutate(year = as.character(year)) %>%
+  relocate(sports_balls, .after = chip_bags) %>%
+  drop_na(dumpster) %>%
+  view()
+```
+
+Combining the Mr. Trash Wheel and Professor Trash Wheel into a single tidy dataset.
+
+```{r warning = FALSE}
+com_df = bind_rows(tw_df, ptw_df) %>%
+  relocate(type, everything()) %>%
+view()
+```
+
+
+In Mr.Trash Wheel, we have `r nrow(tw_df)` observations, and it is charactrized by `r ncol(tw_df)` variables. We can see the example of the first 5 observations by using `print(tw_df, n=5)`. 
+
+```{r warning = FALSE}
+print(tw_df, n=5)
+```
+
+
+Similiarly, we have `r nrow(ptw_df)` observations in the Professional Trash Wheel datasete which is also charactrized by `r ncol(ptw_df)` variables. We can check the first 5 observations by using `print(tw_df, n=5)`.
+ 
+```{r warning = FALSE}
+print(ptw_df, n=5)
+```
+
+
+The total weight of trash collected by Professor Trash Wheel is `r sum(ptw_df$weight_tons)` tons.
+
+The total number of sports balls collected by Mr. Trash Wheel in 2020 is `r sum(tw_df %>% filter(year == 2020) %>% pull(sports_balls))`.
 
 
 

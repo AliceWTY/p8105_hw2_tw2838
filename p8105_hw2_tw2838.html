@@ -385,8 +385,71 @@ library(haven)</code></pre>
 <div id="problem-1" class="section level1">
 <h1><strong>Problem #1</strong></h1>
 </div>
-<div id="problem-2" class="section level1">
-<h1><strong>Problem #2</strong></h1>
+<div id="problem-2-mr.trash-wheel" class="section level1">
+<h1><strong>Problem #2 Mr.Trash Wheel</strong></h1>
+<p>Import and clean the Mr. Trash Wheel excel sheet.</p>
+<pre class="r"><code>tw_df = read_excel(&quot;./data/Trash_Wheel_Collection_Data.xlsx&quot;, sheet = 1, skip = 1) %&gt;%
+  janitor::clean_names() %&gt;% 
+  select(-x15, -x16) %&gt;%
+  mutate(sports_balls = as.integer(sports_balls)) %&gt;% 
+  mutate(type = &quot;Trash Wheel&quot;) %&gt;%
+  drop_na(dumpster) %&gt;%
+  view()</code></pre>
+<pre><code>## New names:
+## • `` -&gt; `...15`
+## • `` -&gt; `...16`</code></pre>
+<p>Import and clean the Professor Trash Wheel sheet.</p>
+<pre class="r"><code>ptw_df = read_excel(&quot;./data/Trash_Wheel_Collection_Data.xlsx&quot;, sheet = 2, skip = 1) %&gt;%
+  janitor::clean_names() %&gt;%
+  mutate(type = &quot;Professor Trash Wheel&quot;) %&gt;%
+  mutate(sports_balls = &quot;NA&quot;) %&gt;%
+  mutate(sports_balls = as.integer(sports_balls)) %&gt;%
+  mutate(year = as.character(year)) %&gt;%
+  relocate(sports_balls, .after = chip_bags) %&gt;%
+  drop_na(dumpster) %&gt;%
+  view()</code></pre>
+<p>Combining the Mr. Trash Wheel and Professor Trash Wheel into a single
+tidy dataset.</p>
+<pre class="r"><code>com_df = bind_rows(tw_df, ptw_df) %&gt;%
+  relocate(type, everything()) %&gt;%
+view()</code></pre>
+<p>In Mr.Trash Wheel, we have 547 observations, and it is charactrized
+by 15 variables. We can see the example of the first 5 observations by
+using <code>print(tw_df, n=5)</code>.</p>
+<pre class="r"><code>print(tw_df, n=5)</code></pre>
+<pre><code>## # A tibble: 547 × 15
+##   dumpster month year  date                weight_tons volume_…¹ plast…² polys…³
+##      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;dttm&gt;                    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1        1 May   2014  2014-05-16 00:00:00        4.31        18    1450    1820
+## 2        2 May   2014  2014-05-16 00:00:00        2.74        13    1120    1030
+## 3        3 May   2014  2014-05-16 00:00:00        3.45        15    2450    3100
+## 4        4 May   2014  2014-05-17 00:00:00        3.1         15    2380    2730
+## 5        5 May   2014  2014-05-17 00:00:00        4.06        18     980     870
+## # … with 542 more rows, 7 more variables: cigarette_butts &lt;dbl&gt;,
+## #   glass_bottles &lt;dbl&gt;, grocery_bags &lt;dbl&gt;, chip_bags &lt;dbl&gt;,
+## #   sports_balls &lt;int&gt;, homes_powered &lt;dbl&gt;, type &lt;chr&gt;, and abbreviated
+## #   variable names ¹​volume_cubic_yards, ²​plastic_bottles, ³​polystyrene</code></pre>
+<p>Similiarly, we have 94 observations in the Professional Trash Wheel
+datasete which is also charactrized by 15 variables. We can check the
+first 5 observations by using <code>print(tw_df, n=5)</code>.</p>
+<pre class="r"><code>print(ptw_df, n=5)</code></pre>
+<pre><code>## # A tibble: 94 × 15
+##   dumpster month    year  date                weight_t…¹ volum…² plast…³ polys…⁴
+##      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt; &lt;dttm&gt;                   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1        1 January  2017  2017-01-02 00:00:00       1.79      15    1950    6080
+## 2        2 January  2017  2017-01-30 00:00:00       1.58      15    9540   11230
+## 3        3 February 2017  2017-02-26 00:00:00       2.32      18    8350    9210
+## 4        4 February 2017  2017-02-26 00:00:00       3.72      15    8590    1030
+## 5        5 February 2017  2017-02-28 00:00:00       1.45      15    7830    9950
+## # … with 89 more rows, 7 more variables: cigarette_butts &lt;dbl&gt;,
+## #   glass_bottles &lt;dbl&gt;, grocery_bags &lt;dbl&gt;, chip_bags &lt;dbl&gt;,
+## #   sports_balls &lt;int&gt;, homes_powered &lt;dbl&gt;, type &lt;chr&gt;, and abbreviated
+## #   variable names ¹​weight_tons, ²​volume_cubic_yards, ³​plastic_bottles,
+## #   ⁴​polystyrene</code></pre>
+<p>The total weight of trash collected by Professor Trash Wheel is
+190.12 tons.</p>
+<p>The total number of sports balls collected by Mr. Trash Wheel in 2020
+is 856.</p>
 </div>
 <div id="problem-3" class="section level1">
 <h1><strong>Problem #3</strong></h1>
